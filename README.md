@@ -2,7 +2,7 @@
 
 ECache - это Spring Java библиотека для кэширования HTTP-запросов.
 
-ECache работает на основе HTTP-заголовка ETag. Главноя отличие ECache от последнего
+ECache работает на основе HTTP-заголовка ETag. Главное отличие ECache от последнего
 в том, что для вычисления значения ETag и передачи ответа со статусом 304 при
 попадании в кэш не выполняется бизнес логика приложения и чтение базы данных, 
 что в определенных условиях приводит к дополнительному увеличению 
@@ -22,8 +22,7 @@ ETag формируется из имен таблиц базы данных, и
 
 ## Добавление в проект
 
-Библиотека распространяется как Spring Boot starter. Для начала 
-работы достаточно добавить зависимость:
+Для начала работы достаточно добавить зависимость:
 
 ```
 <dependency>
@@ -47,17 +46,17 @@ tables можно указать имена таблиц, которые исп�
 Пример использования аннотации `@ECache` для методов контроллеров:
 
 ```java
-    @ECache(tables = {"Organizer"}, entities = {PersonEntity.class})
-    @GetMapping("/organizer/{id}")
-    public ResponseEntity<Organizer> getOrganizers(
-            @RequestHeader(name = HttpHeaders.IF_NONE_MATCH, required = false) String ifNoneMatch,
-            @PathVariable(name = "size") int id) {
+@ECache(tables = {"Organizer"}, entities = {PersonEntity.class})
+@GetMapping("/organizer/{id}")
+public ResponseEntity<Organizer> getOrganizers(
+        @RequestHeader(name = HttpHeaders.IF_NONE_MATCH, required = false) String ifNoneMatch,
+        @PathVariable(name = "size") int id) {
 
-        Organizer organizer = organizerService.findById(id);
+    Organizer organizer = organizerService.findById(id);
 
-        return ResponseEntity.ok()
-                .body(organizer);
-    }
+    return ResponseEntity.ok()
+            .body(organizer);
+}
 ```
 
 После этого в ответы для данного запроса будет автоматически подставляться 
@@ -80,10 +79,10 @@ HTTP-заголока совпадает со значением вычисле�
 Пример использования аннотации `@ECacheEvict` для DAO-классов:
 
 ```java
-    @ECacheEvict(tables = {"Organizer"})
-    public void update(Organizer organizer) {
-        jdbc.update(UPDATE, organizer.getName(), organizer.getId());
-    }
+@ECacheEvict(tables = {"Organizer"})
+public void update(Organizer organizer) {
+    jdbc.update(UPDATE, organizer.getName(), organizer.getId());
+}
 ```
 
 Теперь после вызова метода update для таблицы Organizer будет обновлен ID
@@ -108,12 +107,12 @@ HTTP-заголока совпадает со значением вычисле�
 Пример создания и заполнения `EEntitiesCacheStore`.
 
 ```java
-    @Bean
-    public EEntitiesCacheStore eCacheEntitiesStore() {
-        EEntitiesCacheStore store = new EEntitiesCacheStore();
-        store.addEntity(PersonEntity.class);
-        return store;
-    }
+@Bean
+public EEntitiesCacheStore eCacheEntitiesStore() {
+    EEntitiesCacheStore store = new EEntitiesCacheStore();
+    store.addEntity(PersonEntity.class);
+    return store;
+}
 ```
 
 После этого в случае модификации сущности PersonEntity везде, 
@@ -132,10 +131,10 @@ Spring. Это действие является обязательным.
 Пример выбора локального хранилища. 
 
 ```java
-    @Bean
-    public ECacheService<String, Long> getCache(ECacheManager cacheManager) {
-        return cacheManager.getCache(ECacheName.LOCAL_CACHE.getName());
-    }
+@Bean
+public ECacheService<String, Long> getCache(ECacheManager cacheManager) {
+    return cacheManager.getCache(ECacheName.LOCAL_CACHE.getName());
+}
 ```
 
 В этом случае для хранения будет использоваться внутренняя память Java-приложения.
@@ -149,10 +148,10 @@ Spring. Это действие является обязательным.
 Пример выбора разделяемого хранилища. 
 
 ```java
-    @Bean
-    public ECacheService<String, Long> getCache(ECacheManager cacheManager) {
-        return cacheManager.getCache(ECacheName.REDIS_CACHE.getName());
-    }
+@Bean
+public ECacheService<String, Long> getCache(ECacheManager cacheManager) {
+    return cacheManager.getCache(ECacheName.REDIS_CACHE.getName());
+}
 ```
 
 При выборе разделяемого хранилища на основе Redis нужно также указать host и port
