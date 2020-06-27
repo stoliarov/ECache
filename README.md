@@ -50,7 +50,7 @@ tables можно указать имена таблиц, которые исп�
 @GetMapping("/organizer/{id}")
 public ResponseEntity<Organizer> getOrganizers(
         @RequestHeader(name = HttpHeaders.IF_NONE_MATCH, required = false) String ifNoneMatch,
-        @PathVariable(name = "size") int id) {
+        @PathVariable(name = "id") int id) {
 
     Organizer organizer = organizerService.findById(id);
 
